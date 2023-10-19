@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ log parsing's module."""
-
+import sys
 import re
 
 
@@ -54,7 +54,7 @@ def update_metrics(line, total_file_size, status_codes_stats):
     return total_file_size + line_info['file_size']
 
 
-def main():
+def run():
     """parses the input according to the specified format.
     """
     line_count = 0
@@ -86,4 +86,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    run()
