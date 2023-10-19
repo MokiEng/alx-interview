@@ -5,9 +5,7 @@ import re
 
 
 def extract_input(input_line):
-    """parse sections of a line from an HTTP request log,
-    and it returns a dictionary containing specific pieces 
-    of information extracted from that log line.
+    """parse sections of a line from an HTTP request log.
     """
     pa = (
         r'\s*(?P<ip>\S+)\s*',
@@ -40,7 +38,7 @@ def print_statistics(total_file_size, status_codes_stats):
 
 
 def update_metrics(line, total_file_size, status_codes_stats):
-    """update and maintain metrics based on the information extracted 
+    """update and maintain metrics based on the information extracted
     from an HTTP request log line.
     """
     line_info = extract_input(line)
