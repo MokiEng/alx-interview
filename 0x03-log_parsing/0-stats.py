@@ -55,35 +55,33 @@ def update_metrics(line, total_file_size, status_codes_stats):
 
 
 def run():
-    """parses the input according to the specified format.
-    """
-    line_count = 0
-    total_size = 0
-    stat_ct = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-
+    '''Starts the log parser.
+    '''
+    line_num = 0
+    total_file_size = 0
+    status_codes_stats = {
+        '200': 0,
+        '301': 0,
+        '400': 0,
+        '401': 0,
+        '403': 0,
+        '404': 0,
+        '405': 0,
+        '500': 0,
+    }
     try:
-        for line in sys.stdin:
-            line = line.strip()
-            parsed = parse_log_line(line)
-            if parsed:
-                stat_ct, file_size = parsed
-                total_size += file_size
-                stat_ct[stat_ct] += 1
-
-            line_count += 1
-            if line_count == 10:
-                print(f"Total file size: {total_size}")
-                for code, count in sorted(stat_ct.items()):
-                    if count > 0:
-                        print(f"{code}: {count}")
-                line_count = 0
-
-    except KeyboardInterrupt:
-        print(f"Total file size: {total_size}")
-        for code, count in sorted(stat_ct.items()):
-            if count > 0:
-                print(f"{code}: {count}")
-
+        while True:
+            line = input()
+            total_file_size = update_metrics(
+                line,
+                total_file_size,
+                status_codes_stats,
+            )
+            line_num += 1
+            if line_num % 10 == 0:
+                print_statistics(total_file_size, status_codes_stats)
+    except (KeyboardInterrupt, EOFError):
+        print_statistics(total_file_size, status_codes_stats)
 
 if __name__ == '__main__':
     run()
