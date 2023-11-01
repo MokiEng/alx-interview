@@ -64,13 +64,14 @@ def group_exists(group):
 
 
 def build_solution(row, group):
-    """Builds a solution for the n queens problem."""
-    global solutions
+    """Builds a solution for the n queens problem.
+    """
+     global solutions
     global n
     if row == n:
-        temp0 = group.copy()
-        if not group_exists(temp0):
-            solutions.append(temp0)
+        tmp0 = group.copy()
+        if not group_exists(tmp0):
+            solutions.append(tmp0)
     else:
         for col in range(n):
             a = (row * n) + col
@@ -83,7 +84,8 @@ def build_solution(row, group):
 
 
 def get_solutions():
-    """Gets the solutions for the given chessboard size."""
+    """Gets the solutions for the given chessboard size.
+    """
     global pos, n
     pos = list(map(lambda x: [x // n, x % n], range(n ** 2)))
     a = 0
@@ -95,7 +97,3 @@ n = get_input()
 get_solutions()
 for sol in solutions:
     print(sol)
-    solutions = solve_nqueens(N)
-
-    for sol in solutions:
-        print(sol)
