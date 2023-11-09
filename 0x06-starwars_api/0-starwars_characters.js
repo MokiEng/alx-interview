@@ -1,38 +1,25 @@
 #!/usr/bin/node
-const axios = require('axios');
+const request = require('request');
+const API_URL = 'https://swapi-api.hbtn.io/api';
 
-const getMovieCharacters = async (movieId) => {
-  try {
-    // Fetch movie details
-    const response = await axios.get(`https://swapi.dev/api/films/${movieId}/`);
-    const characters = response.data.characters;
+if (process.argv.length > 2) {
+  request(`${API_URL}/films/${process.argv[2]}/`, (err, _, body) => {
+    if (err) {
+      console.log(err);
+    }
+    const charactersURL = JSON.parse(body).characters;
+    const charactersName = charactersURL.map(
+      url => new Promise((resolve, reject) => {
+        request(url, (promiseErr, __, charactersReqBody) => {
+          if (promiseErr) {
+            reject(promiseErr);
+          }
+          resolve(JSON.parse(charactersReqBody).name);
+        });
+      }));
 
-    // Fetch character details
-    const characterDetails = await Promise.all(
-      characters.map(async (characterUrl) => {
-        const characterResponse = await axios.get(characterUrl);
-        return characterResponse.data.name;
-      })
-    );
-
-    return characterDetails;
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
-    return [];
-  }
-};
-
-const printMovieCharacters = async (movieId) => {
-  const characters = await getMovieCharacters(movieId);
-  characters.forEach((character) => console.log(character));
-};
-
-// Get movie ID from command line arguments
-const movieId = process.argv[2];
-
-// Check if a movie ID is provided
-if (!movieId) {
-  console.error('Please provide a movie ID as a command line argument.');
-} else {
-  printMovieCharacters(movieId);
+    Promise.all(charactersName)
+      .then(names => console.log(names.join('\n')))
+      .catch(allErr => console.log(allErr));
+  });
 }
